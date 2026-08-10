@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>WEATHER APP</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- ========================= -->
+    <!-- LEFT PANEL -->
+    <!-- ========================= -->
+
+    <div class="left-panel">
+
+
+        <!-- LOGO -->
+
+        <div class="logo">
+
+            <i class="fa-solid fa-sun"></i>
+
+            
+
+            <!-- Unit Dropdown -->
+
+            <select>
+
+                <option>Units</option>
+
+                <option>°C<option>
+
+                <options>°F</options>
+
+            </select>
+
+        </div>
+
+
+        <!-- MAIN HEADING -->
+
+        <h1>
+
+            How's the<br>
+
+            sky looking<br>
+
+            today?
+
+        </h1>
+
+
+        <!-- SEARCH BOX -->
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                placeholder="Search for a place...."
+            >
+
+            <button>
+                Search
+            </button>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- CURRENT WEATHER CARD -->
+        <!-- ========================= -->
+
+        <div class="weather-card">
+
+            <div class="weather-top">
+
+
+                <!-- Weather Image -->
+
+                <img
+                    src="images/sun.png"
+                    alt=""
+                >
+
+
+                <!-- Weather Information -->
+
+                <div class="weather-info">
+
+                    <h2>
+                        Berlin, Germany
+                    </h2>
+
+                    <p>
+                        Thursday,6 August 2026
+                    </p>
+
+                    <h1>
+                        20°
+                    </h1>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- SMALL WEATHER CARDS -->
+        <!-- ========================= -->
+
+        <div class="small-cards">
+
+
+            <!-- FEELS LIKE -->
+
+            <div class="card">
+
+                <i class="fa-solid fa-temperature-half"></i>
+
+                <div class="card-info">
+
+                    <h3>
+                        Feels Like
+                    </h3>
+
+                    <p>
+                        18°
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- HUMIDITY -->
+
+            <div class="card">
+
+                <i class="fa-solid fa-droplet"></i>
+
+                <div class="card-info">
+
+                    <h3>
+                        Humidity
+                    </h3>
+
+                    <p>
+                        46%
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- WIND -->
+
+            <div class="card">
+
+                <i class="fa-solid fa-wind"></i>
+
+                <div class="card-info">
+
+                    <h3>
+                        Wind
+                    </h3>
+
+                    <p>
+                        18 km/h
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRECIPITATION -->
+
+            <div class="card">
+
+                <i class="fa-solid fa-cloud-rain"></i>
+
+                <div class="card-info">
+
+                    <h3>
+                        Precipitation
+                    </h3>
+
+                    <p>
+                        0 mm
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- RIGHT PANEL -->
+    <!-- ========================= -->
+
+    <div class="right-panel">
+
+
+        <!-- ========================= -->
+        <!-- DAILY FORECAST -->
+        <!-- ========================= -->
+
+        <h2>
+            Daily Forecast
+        </h2>
+
+
+        <div class="forecast">
+
+
+            <!-- MONDAY -->
+
+            <div class="day">
+
+                <h4>
+                    Mon
+                </h4>
+
+                <img src="images/cloudy.png">
+
+                <p>
+                    20° / 14°
+                </p>
+
+            </div>
+
+
+            <!-- TUESDAY -->
+
+            <div class="day">
+
+                <h4>
+                    Tue
+                </h4>
+
+                <img src="images/Rainy.png">
+
+                <p>
+                    34° / 14°
+                </p>
+
+            </div>
+
+
+            <!-- WEDNESDAY -->
+
+            <div class="day">
+
+                <h4>
+                    Wed
+                </h4>
+
+                <img src="images/cloudy.png">
+
+                <p>
+                    20° / 14°
+                </p>
+
+            </div>
+
+
+            <!-- THURSDAY -->
+
+            <div class="day">
+
+                <h4>
+                    Thu
+                </h4>
+
+                <img src="images/Thunderstorm.png">
+
+                <p>
+                    12° / 14°
+                </p>
+
+            </div>
+
+
+            <!-- FRIDAY -->
+
+            <div class="day">
+
+                <h4>
+                    Fri
+                </h4>
+
+                <img src="images/Windy.png">
+
+                <p>
+                    34° / 14°
+                </p>
+
+            </div>
+
+
+            <!-- SATURDAY -->
+
+            <div class="day">
+
+                <h4>
+                    Sat
+                </h4>
+
+                <img src="images/sun.png">
+
+                <p>
+                    45° / 16°
+                </p>
+
+            </div>
+
+
+            <!-- SUNDAY -->
+
+            <div class="day">
+
+                <h4>
+                    Sun
+                </h4>
+
+                <img src="images/windy.png">
+
+                <p>
+                    45° / 16°
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- HOURLY FORECAST -->
+        <!-- ========================= -->
+
+        <div class="hourly">
+
+
+            <div class="hour-title">
+
+                <h2>
+                    Hourly Forecast
+                </h2>
+
+
+                <select>
+
+                    <option>Monday</option>
+
+                    <option>Tuesday</option>
+
+                    <option>Wednesday</option>
+
+                    <option>Thursday</option>
+
+                    <option>Friday</option>
+
+                    <option>Saturday</option>
+
+                    <option>Sunday</option>
+
+                </select>
+
+            </div>
+
+
+            <!-- HOURLY CARDS -->
+
+            <div class="hour-card">
+
+
+                <!-- 3 PM -->
+
+                <div class="hour">
+
+                    <span>
+                        ☁️
+                    </span>
+
+                    <span>
+                        3 PM
+                    </span>
+
+                    <span>
+                        20°
+                    </span>
+
+                </div>
+
+
+                <!-- 4 PM -->
+
+                <div class="hour">
+
+                    <span>
+                        🌤️
+                    </span>
+
+                    <span>
+                        4 PM
+                    </span>
+
+                    <span>
+                        20°
+                    </span>
+
+                </div>
+
+
+                <!-- 5 PM -->
+
+                <div class="hour">
+
+                    <span>
+                        ☀️
+                    </span>
+
+                    <span>
+                        5 PM
+                    </span>
+
+                    <span>
+                        20°
+                    </span>
+
+                </div>
+
+
+                <!-- 6 PM -->
+
+                <div class="hour">
+
+                    <span>
+                        ☁️
+                    </span>
+
+                    <span>
+                        6 PM
+                    </span>
+
+                    <span>
+                        19°
+                    </span>
+
+                </div>
+
+
+                <!-- 7 PM -->
+
+                <div class="hour">
+
+                    <span>
+                        ☁️
+                    </span>
+
+                    <span>
+                        7 PM
+                    </span>
+
+                    <span>
+                        18°
+                    </span>
+
+                </div>
+
+
+                <!-- 8 PM -->
+
+                <div class="hour">
+
+                    <span>
+                        🌫️
+                    </span>
+
+                    <span>
+                        8 PM
+                    </span>
+
+                    <span>
+                        18°
+                    </span>
+
+                </div>
+
+
+                <!-- 9 PM -->
+
+                <div class="hour">
+
+                    <span>
+                        ☁️
+                    </span>
+
+                    <span>
+                        9 PM
+                    </span>
+
+                    <span>
+                        17°
+                    </span>
+
+                </div>
+
+
+                <!-- 10 PM -->
+
+                <div class="hour">
+
+                    <span>
+                        ☁️
+                    </span>
+
+                    <span>
+                        10 PM
+                    </span>
+
+                    <span>
+                        17°
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+<script src="javascript.js"></script>
+
+</body>
+
+</html>
