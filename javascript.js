@@ -4,90 +4,107 @@
 
 
 // ======================================================
-// 1. HTML ELEMENTS SELECT KARNA
+// 1. HTML ELEMENTS
 // ======================================================
+
 
 // Search input
-const searchInput = document.querySelector(".search-box input");
+const searchInput =
+    document.querySelector("#searchInput");
+
 
 // Search button
-const searchButton = document.querySelector(".search-box button");
+const searchButton =
+    document.querySelector("#searchButton");
 
-// Main weather image
-const weatherImage = document.querySelector(".weather-top img");
+
+// Weather image
+const weatherImage =
+    document.querySelector("#weatherImage");
+
 
 // City name
-const cityName = document.querySelector(".weather-info h2");
+const cityName =
+    document.querySelector("#cityName");
+
 
 // Date
-const dateText = document.querySelector(".weather-info p");
+const dateText =
+    document.querySelector("#dateText");
+
 
 // Main temperature
-const temperature = document.querySelector(".weather-info h1");
+const temperature =
+    document.querySelector("#temperature");
 
-
-// ======================================================
-// 2. SMALL WEATHER CARDS
-// ======================================================
-
-const cards = document.querySelectorAll(".small-cards .card");
 
 // Feels Like
-const feelsLike = cards[0].querySelector("p");
+const feelsLike =
+    document.querySelector("#feelsLike");
+
 
 // Humidity
-const humidity = cards[1].querySelector("p");
+const humidity =
+    document.querySelector("#humidity");
+
 
 // Wind
-const wind = cards[2].querySelector("p");
+const wind =
+    document.querySelector("#wind");
+
 
 // Precipitation
-const precipitation = cards[3].querySelector("p");
+const precipitation =
+    document.querySelector("#precipitation");
 
-
-// ======================================================
-// 3. FORECAST ELEMENTS
-// ======================================================
 
 // Daily forecast container
 const forecastContainer =
-    document.querySelector(".forecast");
+    document.querySelector("#forecast");
+
 
 // Hourly dropdown
 const hourlySelect =
-    document.querySelector(".hour-title select");
+    document.querySelector("#hourlySelect");
+
 
 // Hourly cards container
 const hourCard =
-    document.querySelector(".hour-card");
+    document.querySelector("#hourCard");
 
-// °C / °F dropdown
+
+// Celsius / Fahrenheit dropdown
 const unitSelect =
-    document.querySelector(".logo select");
+    document.querySelector("#unitSelect");
 
 
 // ======================================================
-// 4. GLOBAL VARIABLES
+// 2. GLOBAL VARIABLES
 // ======================================================
+
 
 // Default city
 let currentCity = "Dehradun";
 
-// Weather data ko store karenge
+
+// Weather data
 let weatherData = null;
 
-// Current unit
+
+// Current temperature unit
 let currentUnit = "C";
 
 
 // ======================================================
-// 5. SEARCH BUTTON
+// 3. SEARCH BUTTON
 // ======================================================
 
 searchButton.addEventListener("click", () => {
 
     // Input se city ka naam lena
-    const city = searchInput.value.trim();
+    const city =
+        searchInput.value.trim();
+
 
     // Agar input empty hai
     if (city === "") {
@@ -97,43 +114,55 @@ searchButton.addEventListener("click", () => {
         return;
     }
 
+
     // Current city update
     currentCity = city;
 
-    // Weather fetch
+
+    // Weather load
     getWeather(city);
 
 });
 
 
 // ======================================================
-// 6. ENTER KEY SE SEARCH
+// 4. ENTER KEY SEARCH
 // ======================================================
 
-searchInput.addEventListener("keypress", (event) => {
+searchInput.addEventListener(
+    "keypress",
+    (event) => {
 
-    // Agar Enter press hua
-    if (event.key === "Enter") {
+        // Agar Enter press hua
+        if (event.key === "Enter") {
 
-        const city = searchInput.value.trim();
+            // Input se city
+            const city =
+                searchInput.value.trim();
 
-        // Agar input empty hai
-        if (city === "") {
-            return;
+
+            // Empty input
+            if (city === "") {
+
+                return;
+            }
+
+
+            // Current city
+            currentCity = city;
+
+
+            // Weather
+            getWeather(city);
+
         }
 
-        // Current city update
-        currentCity = city;
-
-        // Weather fetch
-        getWeather(city);
     }
-
-});
+);
 
 
 // ======================================================
-// 7. MAIN WEATHER FUNCTION
+// 5. GET WEATHER
 // ======================================================
 
 async function getWeather(city) {
@@ -141,54 +170,135 @@ async function getWeather(city) {
     try {
 
         // ==================================================
-        // CITY KI LOCATION FIND KARNA
+        // LOADING STATE
         // ==================================================
 
-        const locationResponse = await fetch(
+        // Purana weather temporarily hata do
+        cityName.textContent =
+            "Loading...";
 
-            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`
+        dateText.textContent =
+            "Getting weather data...";
 
-        );
+        temperature.textContent =
+            "--°";
+
+        feelsLike.textContent =
+            "--";
+
+        humidity.textContent =
+            "--";
+
+        wind.textContent =
+            "--";
+
+        precipitation.textContent =
+            "--";
 
 
-        // Response ko JSON mein convert
+        // Purane daily cards hata do
+        forecastContainer.innerHTML = "";
+
+
+        // Purane hourly cards hata do
+        hourCard.innerHTML = "";
+
+
+        // Purane dropdown options hata do
+        hourlySelect.innerHTML = "";
+
+
+        // ==================================================
+        // LOCATION API
+        // ==================================================
+
+        /*
+            count=10 isliye rakha hai taaki
+            same naam ki multiple cities mil saken.
+
+            Example:
+            Srinagar -> India / Pakistan
+        */
+
+        const locationResponse =
+            await fetch(
+
+                `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=10&language=en&format=json`
+
+            );
+
+
+        // Response ko JSON mein convert karo
         const locationData =
             await locationResponse.json();
 
 
-        // Agar city nahi mili
+        // ==================================================
+        // CITY NOT FOUND
+        // ==================================================
+
         if (
             !locationData.results ||
             locationData.results.length === 0
         ) {
 
-            alert("City not found!");
+            cityName.textContent =
+                "City not found";
+
+            dateText.textContent =
+                "Please try another city";
+
+            temperature.textContent =
+                "--°";
 
             return;
         }
 
 
-        // First result
+        // ==================================================
+        // CORRECT CITY SELECT KARNA
+        // ==================================================
+
+        /*
+            Agar results mein India ka city hai,
+            to pehle India wala result choose karo.
+
+            Example:
+            Srinagar search karne par agar
+            India + Pakistan dono aaye,
+            to India wala select hoga.
+        */
+
+        const indianLocation =
+            locationData.results.find(
+                location =>
+                    location.country_code === "IN"
+            );
+
+
+        /*
+            India result mila to India wala.
+            Nahi mila to first result.
+        */
+
         const location =
+            indianLocation ||
             locationData.results[0];
 
 
-        // Latitude
+        // ==================================================
+        // LOCATION DETAILS
+        // ==================================================
+
         const latitude =
             location.latitude;
 
-
-        // Longitude
         const longitude =
             location.longitude;
 
-
-        // City name
         const cityFromAPI =
             location.name;
 
-
-        // Country
         const country =
             location.country;
 
@@ -197,59 +307,73 @@ async function getWeather(city) {
         // WEATHER API
         // ==================================================
 
-        const weatherResponse = await fetch(
+        const weatherResponse =
+            await fetch(
 
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&timezone=auto`
+                `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&timezone=auto`
 
-        );
+            );
 
 
-        // Weather response ko JSON mein convert
-        weatherData =
+        // Weather JSON
+        const data =
             await weatherResponse.json();
 
 
-        // API ke location ko store karna
-        weatherData.location = {
+        // ==================================================
+        // LOCATION SAVE
+        // ==================================================
+
+        data.location = {
+
             name: cityFromAPI,
+
             country: country
+
         };
 
 
+        // Global weather data
+        weatherData =
+            data;
+
+
         // ==================================================
-        // CURRENT WEATHER
+        // CURRENT WEATHER UPDATE
         // ==================================================
 
         updateCurrentWeather(
             cityFromAPI,
             country,
-            weatherData
+            data
         );
 
 
         // ==================================================
-        // DAILY FORECAST
+        // DAILY FORECAST UPDATE
         // ==================================================
 
-        updateDailyForecast(weatherData);
+        updateDailyForecast(data);
 
 
         // ==================================================
-        // HOURLY FORECAST
+        // HOURLY DROPDOWN CREATE
         // ==================================================
 
-        // Pehle day ka hourly forecast
+        createHourlyDropdown(data);
+
+
+        // ==================================================
+        // DEFAULT HOURLY = TODAY
+        // ==================================================
+
         updateHourlyForecast(
-            weatherData,
+            data,
             0
         );
 
     }
 
-
-    // ==================================================
-    // ERROR HANDLE
-    // ==================================================
 
     catch (error) {
 
@@ -258,9 +382,17 @@ async function getWeather(city) {
             error
         );
 
-        alert(
-            "Something went wrong. Please try again."
-        );
+
+        cityName.textContent =
+            "Unable to load";
+
+
+        dateText.textContent =
+            "Please check your internet connection";
+
+
+        temperature.textContent =
+            "--°";
 
     }
 
@@ -268,7 +400,7 @@ async function getWeather(city) {
 
 
 // ======================================================
-// 8. CURRENT WEATHER UPDATE
+// 6. CURRENT WEATHER
 // ======================================================
 
 function updateCurrentWeather(
@@ -277,7 +409,7 @@ function updateCurrentWeather(
     data
 ) {
 
-    // Current weather
+    // Current weather data
     const current =
         data.current;
 
@@ -339,7 +471,9 @@ function updateCurrentWeather(
     // ==================================================
 
     const date =
-        new Date();
+        new Date(
+            data.current.time
+        );
 
 
     dateText.textContent =
@@ -373,7 +507,7 @@ function updateCurrentWeather(
 
 
 // ======================================================
-// 9. DAILY FORECAST
+// 7. DAILY FORECAST
 // ======================================================
 
 function updateDailyForecast(data) {
@@ -382,16 +516,26 @@ function updateDailyForecast(data) {
     forecastContainer.innerHTML = "";
 
 
+    // Daily data
     const daily =
         data.daily;
 
 
-    // 7 days
-    for (let i = 0; i < 7; i++) {
+    // ==================================================
+    // 7 DAYS
+    // ==================================================
+
+    for (
+        let i = 0;
+        i < daily.time.length;
+        i++
+    ) {
 
         // Date
         const date =
-            new Date(daily.time[i]);
+            new Date(
+                daily.time[i]
+            );
 
 
         // Day name
@@ -430,10 +574,15 @@ function updateDailyForecast(data) {
         day.classList.add("day");
 
 
-        // Card HTML
+        // ==================================================
+        // DAY CARD HTML
+        // ==================================================
+
         day.innerHTML = `
 
-            <h4>${dayName}</h4>
+            <h4>
+                ${dayName}
+            </h4>
 
             <img
                 src="${getWeatherImage(weatherCode)}"
@@ -450,25 +599,29 @@ function updateDailyForecast(data) {
 
 
         // ==================================================
-        // DAY CARD CLICK
+        // CLICK DAY CARD
         // ==================================================
 
-        day.addEventListener("click", () => {
+        day.addEventListener(
+            "click",
+            () => {
 
-            // Selected day ka hourly forecast
-            updateHourlyForecast(
-                weatherData,
-                i
-            );
-
-
-            // Dropdown ko same day par set karo
-            hourlySelect.selectedIndex = i;
-
-        });
+                // Selected day ka hourly forecast
+                updateHourlyForecast(
+                    weatherData,
+                    i
+                );
 
 
-        // Card ko container mein add
+                // Dropdown ko bhi same day par set karo
+                hourlySelect.value =
+                    i.toString();
+
+            }
+        );
+
+
+        // Card ko container mein add karo
         forecastContainer.appendChild(day);
 
     }
@@ -477,27 +630,95 @@ function updateDailyForecast(data) {
 
 
 // ======================================================
-// 10. HOURLY FORECAST
+// 8. CREATE HOURLY DROPDOWN
 // ======================================================
-//
-// IMPORTANT:
-// Ab yahan "NOW" wala system hai.
-//
-// Aaj ke din:
-//
-// Now
-// 2:00 AM
-// 3:00 AM
-// 4:00 AM
-// 5:00 AM
-// ...
-//
-// Future day select karne par:
-// 12:00 AM
-// 1:00 AM
-// 2:00 AM
-// ...
-//
+
+function createHourlyDropdown(data) {
+
+    // Purane options remove
+    hourlySelect.innerHTML = "";
+
+
+    // Daily data
+    const daily =
+        data.daily;
+
+
+    // ==================================================
+    // TODAY
+    // ==================================================
+
+    const todayOption =
+        document.createElement("option");
+
+
+    todayOption.value =
+        "0";
+
+
+    todayOption.textContent =
+        "Today";
+
+
+    hourlySelect.appendChild(
+        todayOption
+    );
+
+
+    // ==================================================
+    // NEXT DAYS
+    // ==================================================
+
+    for (
+        let i = 1;
+        i < daily.time.length;
+        i++
+    ) {
+
+        // Date
+        const date =
+            new Date(
+                daily.time[i]
+            );
+
+
+        // Full weekday
+        const dayName =
+            date.toLocaleDateString(
+                "en-US",
+                {
+                    weekday: "long"
+                }
+            );
+
+
+        // Option create
+        const option =
+            document.createElement("option");
+
+
+        // Index
+        option.value =
+            i.toString();
+
+
+        // Monday / Tuesday / etc.
+        option.textContent =
+            dayName;
+
+
+        // Add option
+        hourlySelect.appendChild(
+            option
+        );
+
+    }
+
+}
+
+
+// ======================================================
+// 9. HOURLY FORECAST
 // ======================================================
 
 function updateHourlyForecast(
@@ -505,22 +726,25 @@ function updateHourlyForecast(
     dayIndex
 ) {
 
-    // Purane hourly cards remove
+    // ==================================================
+    // OLD CARDS REMOVE
+    // ==================================================
+
     hourCard.innerHTML = "";
 
 
-    // API se hourly data
+    // Hourly data
     const hourly =
         data.hourly;
 
 
     // ==================================================
-    // AGAR AAJ KA DIN HAI
+    // TODAY
     // ==================================================
 
     if (dayIndex === 0) {
 
-        // Current date/time
+        // Current time
         const now =
             new Date();
 
@@ -530,11 +754,14 @@ function updateHourlyForecast(
             now.getHours();
 
 
-        // API mein current hour ka index
+        // API current hour index
         let startIndex = 0;
 
 
-        // Current hour find karna
+        // ==================================================
+        // FIND CURRENT HOUR
+        // ==================================================
+
         for (
             let i = 0;
             i < hourly.time.length;
@@ -542,17 +769,23 @@ function updateHourlyForecast(
         ) {
 
             const time =
-                new Date(hourly.time[i]);
+                new Date(
+                    hourly.time[i]
+                );
 
 
             if (
-                time.getHours() === currentHour
+                time.getHours() ===
+                currentHour
             ) {
 
-                startIndex = i;
+                startIndex =
+                    i;
 
                 break;
+
             }
+
         }
 
 
@@ -564,8 +797,9 @@ function updateHourlyForecast(
             document.createElement("div");
 
 
-        // "hour" class
-        nowElement.classList.add("hour");
+        nowElement.classList.add(
+            "hour"
+        );
 
 
         // Current temperature
@@ -573,7 +807,7 @@ function updateHourlyForecast(
             data.current.temperature_2m;
 
 
-        // Current weather code
+        // Current weather
         const nowWeatherCode =
             data.current.weather_code;
 
@@ -596,18 +830,15 @@ function updateHourlyForecast(
         `;
 
 
-        // Sabse pehle Now card add
+        // Add Now
         hourCard.appendChild(
             nowElement
         );
 
 
         // ==================================================
-        // NOW KE BAAD KE HOURS
+        // NEXT HOURS
         // ==================================================
-
-        // Current hour ke baad
-        // 8 aur hours dikhao
 
         const endIndex =
             Math.min(
@@ -622,9 +853,11 @@ function updateHourlyForecast(
             i++
         ) {
 
-            // Hour ka time
+            // Time
             const time =
-                new Date(hourly.time[i]);
+                new Date(
+                    hourly.time[i]
+                );
 
 
             // Hour
@@ -639,13 +872,15 @@ function updateHourlyForecast(
                     : "AM";
 
 
-            // 12-hour format
+            // 12 hour format
             let displayHour =
                 hour % 12;
 
 
-            // 0 ko 12 banana
-            if (displayHour === 0) {
+            // Midnight
+            if (
+                displayHour === 0
+            ) {
 
                 displayHour = 12;
 
@@ -662,15 +897,14 @@ function updateHourlyForecast(
                 hourly.weather_code[i];
 
 
-            // ==================================================
-            // HOURLY CARD CREATE
-            // ==================================================
-
+            // Create card
             const hourElement =
                 document.createElement("div");
 
 
-            hourElement.classList.add("hour");
+            hourElement.classList.add(
+                "hour"
+            );
 
 
             // Card HTML
@@ -691,7 +925,7 @@ function updateHourlyForecast(
             `;
 
 
-            // Card add
+            // Add card
             hourCard.appendChild(
                 hourElement
             );
@@ -707,19 +941,92 @@ function updateHourlyForecast(
 
     else {
 
-        // Future day ka starting hour
+        /*
+            Har day mein 24 hours hote hain.
+
+            Day 1:
+            24 - 47
+
+            Day 2:
+            48 - 71
+
+            Day 3:
+            72 - 95
+
+            etc.
+        */
+
         const startHour =
             dayIndex * 24;
 
 
-        // 24 hours
         const endHour =
             startHour + 24;
 
 
-        // Future day ke hours
+        // ==================================================
+        // FUTURE DAY KA FIRST HOUR
+        // ==================================================
+
+        /*
+            Selected future day ka
+            pehla hour normally 12:00 AM hota hai.
+
+            User ke requested UI ke according
+            isko "Now" label diya ja raha hai.
+        */
+
+        const firstWeatherCode =
+            hourly.weather_code[startHour];
+
+
+        const firstTemperature =
+            hourly.temperature_2m[startHour];
+
+
+        // ==================================================
+        // CREATE NOW CARD
+        // ==================================================
+
+        const nowElement =
+            document.createElement("div");
+
+
+        nowElement.classList.add(
+            "hour"
+        );
+
+
+        // First hour ko Now dikhana
+        nowElement.innerHTML = `
+
+            <span>
+                ${getWeatherEmoji(firstWeatherCode)}
+            </span>
+
+            <span>
+                Now
+            </span>
+
+            <span>
+                ${formatTemperature(firstTemperature)}
+            </span>
+
+        `;
+
+
+        // Add Now
+        hourCard.appendChild(
+            nowElement
+        );
+
+
+        // ==================================================
+        // REMAINING HOURS
+        // ==================================================
+
         for (
-            let i = startHour;
+            let i = startHour + 1;
             i < endHour &&
             i < hourly.time.length;
             i++
@@ -727,7 +1034,9 @@ function updateHourlyForecast(
 
             // Time
             const time =
-                new Date(hourly.time[i]);
+                new Date(
+                    hourly.time[i]
+                );
 
 
             // Hour
@@ -742,12 +1051,15 @@ function updateHourlyForecast(
                     : "AM";
 
 
-            // 12-hour format
+            // 12 hour format
             let displayHour =
                 hour % 12;
 
 
-            if (displayHour === 0) {
+            // Midnight
+            if (
+                displayHour === 0
+            ) {
 
                 displayHour = 12;
 
@@ -764,15 +1076,17 @@ function updateHourlyForecast(
                 hourly.weather_code[i];
 
 
-            // Card
+            // Create card
             const hourElement =
                 document.createElement("div");
 
 
-            hourElement.classList.add("hour");
+            hourElement.classList.add(
+                "hour"
+            );
 
 
-            // Card HTML
+            // HTML
             hourElement.innerHTML = `
 
                 <span>
@@ -790,7 +1104,7 @@ function updateHourlyForecast(
             `;
 
 
-            // Card add
+            // Add card
             hourCard.appendChild(
                 hourElement
             );
@@ -803,101 +1117,116 @@ function updateHourlyForecast(
 
 
 // ======================================================
-// 11. HOURLY DROPDOWN
+// 10. HOURLY DROPDOWN CHANGE
 // ======================================================
 
-hourlySelect.addEventListener("change", () => {
+hourlySelect.addEventListener(
+    "change",
+    () => {
 
-    // Selected day ka index
-    const selectedDay =
-        hourlySelect.selectedIndex;
-
-
-    // Agar weather data available hai
-    if (weatherData) {
-
-        // Selected day ka hourly forecast
-        updateHourlyForecast(
-            weatherData,
-            selectedDay
-        );
-
-    }
-
-});
+        // Selected day
+        const selectedDay =
+            Number(
+                hourlySelect.value
+            );
 
 
-// ======================================================
-// 12. °C / °F DROPDOWN
-// ======================================================
+        // Weather data available?
+        if (weatherData) {
 
-unitSelect.addEventListener("change", () => {
+            // Selected day ka forecast
+            updateHourlyForecast(
+                weatherData,
+                selectedDay
+            );
 
-    // Selected unit
-    const selectedUnit =
-        unitSelect.value;
-
-
-    // Agar Fahrenheit select kiya
-    if (
-        selectedUnit.includes("F")
-    ) {
-
-        currentUnit = "F";
+        }
 
     }
-
-    // Otherwise Celsius
-    else {
-
-        currentUnit = "C";
-
-    }
-
-
-    // Agar weather data available hai
-    if (weatherData) {
-
-        // Current weather update
-        updateCurrentWeather(
-            weatherData.location.name,
-            weatherData.location.country,
-            weatherData
-        );
-
-
-        // Daily forecast update
-        updateDailyForecast(
-            weatherData
-        );
-
-
-        // Hourly forecast update
-        updateHourlyForecast(
-            weatherData,
-            hourlySelect.selectedIndex
-        );
-
-    }
-
-});
+);
 
 
 // ======================================================
-// 13. TEMPERATURE FORMAT
+// 11. CELSIUS / FAHRENHEIT
+// ======================================================
+
+unitSelect.addEventListener(
+    "change",
+    () => {
+
+        // Selected unit
+        const selectedUnit =
+            unitSelect.value;
+
+
+        // Fahrenheit
+        if (
+            selectedUnit === "F"
+        ) {
+
+            currentUnit =
+                "F";
+
+        }
+
+
+        // Celsius
+        else {
+
+            currentUnit =
+                "C";
+
+        }
+
+
+        // Weather data available
+        if (weatherData) {
+
+            // Current weather
+            updateCurrentWeather(
+                weatherData.location.name,
+                weatherData.location.country,
+                weatherData
+            );
+
+
+            // Daily forecast
+            updateDailyForecast(
+                weatherData
+            );
+
+
+            // Current hourly selection
+            updateHourlyForecast(
+                weatherData,
+                Number(
+                    hourlySelect.value
+                )
+            );
+
+        }
+
+    }
+);
+
+
+// ======================================================
+// 12. FORMAT TEMPERATURE
 // ======================================================
 
 function formatTemperature(temp) {
 
     // Fahrenheit
-    if (currentUnit === "F") {
+    if (
+        currentUnit === "F"
+    ) {
 
-        // Celsius -> Fahrenheit
         const fahrenheit =
             (temp * 9 / 5) + 32;
 
 
         return `${Math.round(fahrenheit)}°`;
+
     }
 
 
@@ -908,14 +1237,15 @@ function formatTemperature(temp) {
 
 
 // ======================================================
-// 14. WEATHER CODE -> IMAGE
+// 13. WEATHER IMAGE
 // ======================================================
 
 function getWeatherImage(code) {
 
-
     // Clear sky
-    if (code === 0) {
+    if (
+        code === 0
+    ) {
 
         return "images/sun.png";
 
@@ -934,7 +1264,9 @@ function getWeatherImage(code) {
 
 
     // Cloudy
-    if (code === 3) {
+    if (
+        code === 3
+    ) {
 
         return "images/cloudy.png";
 
@@ -992,14 +1324,15 @@ function getWeatherImage(code) {
 
 
 // ======================================================
-// 15. WEATHER CODE -> EMOJI
+// 14. WEATHER EMOJI
 // ======================================================
 
 function getWeatherEmoji(code) {
 
-
-    // Sunny
-    if (code === 0) {
+    // Clear
+    if (
+        code === 0
+    ) {
 
         return "☀️";
 
@@ -1018,7 +1351,9 @@ function getWeatherEmoji(code) {
 
 
     // Cloudy
-    if (code === 3) {
+    if (
+        code === 3
+    ) {
 
         return "☁️";
 
@@ -1054,14 +1389,15 @@ function getWeatherEmoji(code) {
 
 
 // ======================================================
-// 16. WEATHER CODE -> DESCRIPTION
+// 15. WEATHER DESCRIPTION
 // ======================================================
 
 function getWeatherDescription(code) {
 
-
     // Clear
-    if (code === 0) {
+    if (
+        code === 0
+    ) {
 
         return "Clear sky";
 
@@ -1080,7 +1416,9 @@ function getWeatherDescription(code) {
 
 
     // Cloudy
-    if (code === 3) {
+    if (
+        code === 3
+    ) {
 
         return "Cloudy";
 
@@ -1138,10 +1476,14 @@ function getWeatherDescription(code) {
 
 
 // ======================================================
-// 17. WEBSITE LOAD
+// 16. DEFAULT CITY
 // ======================================================
 
-// Website open hote hi
-// Dehradun ka weather load hoga
+
+// Page load hote hi
+// Dehradun ka weather load hoga.
+//
+// HTML mein Berlin nahi hai,
+// isliye refresh par Berlin flash nahi karega.
 
 getWeather("Dehradun");

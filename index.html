@@ -39,7 +39,7 @@
 
             <i class="fa-solid fa-sun"></i>
 
-            <span>Weather Now</span>
+           
 
 
             <!-- Temperature Unit -->
@@ -55,7 +55,9 @@
         </div>
 
 
-        <!-- HEADING -->
+        <!-- ================================================= -->
+        <!-- MAIN HEADING -->
+        <!-- ================================================= -->
 
         <h1>
 
@@ -68,14 +70,16 @@
         </h1>
 
 
-        <!-- SEARCH -->
+        <!-- ================================================= -->
+        <!-- SEARCH BOX -->
+        <!-- ================================================= -->
 
         <div class="search-box">
 
             <input
                 type="text"
-                placeholder="Search for a place..."
                 id="searchInput"
+                placeholder="Search for a place..."
             >
 
             <button id="searchButton">
@@ -86,7 +90,7 @@
 
 
         <!-- ================================================= -->
-        <!-- CURRENT WEATHER -->
+        <!-- CURRENT WEATHER CARD -->
         <!-- ================================================= -->
 
         <div class="weather-card">
@@ -97,9 +101,9 @@
                 <!-- Weather Image -->
 
                 <img
+                    id="weatherImage"
                     src="images/cloudy.png"
                     alt="Weather"
-                    id="weatherImage"
                 >
 
 
@@ -107,9 +111,9 @@
 
                 <div class="weather-info">
 
-                    <!-- IMPORTANT:
-                         Berlin hata diya.
-                         Ab initially Loading show hoga.
+                    <!--
+                        Yahan Berlin nahi hai.
+                        Isliye refresh par Berlin flash nahi hoga.
                     -->
 
                     <h2 id="cityName">
@@ -230,6 +234,7 @@
     </div>
 
 
+
     <!-- ================================================= -->
     <!-- RIGHT PANEL -->
     <!-- ================================================= -->
@@ -237,18 +242,27 @@
     <div class="right-panel">
 
 
+        <!-- ================================================= -->
         <!-- DAILY FORECAST -->
+        <!-- ================================================= -->
 
         <h2>
             Daily Forecast
         </h2>
 
 
-        <div class="forecast" id="forecast">
+        <div
+            class="forecast"
+            id="forecast"
+        >
 
-            <!-- JavaScript yahan daily cards banayega -->
+            <!--
+                JavaScript yahan
+                daily forecast cards banayega.
+            -->
 
         </div>
+
 
 
         <!-- ================================================= -->
@@ -258,6 +272,8 @@
         <div class="hourly">
 
 
+            <!-- HOURLY TITLE -->
+
             <div class="hour-title">
 
                 <h2>
@@ -265,32 +281,45 @@
                 </h2>
 
 
+                <!--
+                    IMPORTANT:
+
+                    Is dropdown ke options
+                    JavaScript dynamically create karega.
+
+                    Example:
+
+                    Today
+                    Tuesday
+                    Wednesday
+                    Thursday
+                    Friday
+                    Saturday
+                    Sunday
+                    Monday
+                -->
+
                 <select id="hourlySelect">
-
-                    <option>Today</option>
-
-                    <option>Tomorrow</option>
-
-                    <option>Day 3</option>
-
-                    <option>Day 4</option>
-
-                    <option>Day 5</option>
-
-                    <option>Day 6</option>
-
-                    <option>Day 7</option>
 
                 </select>
 
             </div>
 
 
+
+            <!-- ================================================= -->
             <!-- HOURLY CARDS -->
+            <!-- ================================================= -->
 
-            <div class="hour-card" id="hourCard">
+            <div
+                class="hour-card"
+                id="hourCard"
+            >
 
-                <!-- JavaScript yahan hourly cards banayega -->
+                <!--
+                    JavaScript yahan
+                    hourly cards create karega.
+                -->
 
             </div>
 
@@ -302,6 +331,7 @@
 
 
 </div>
+
 
 
 <!-- ================================================= -->
